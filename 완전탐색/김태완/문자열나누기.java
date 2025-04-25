@@ -51,7 +51,6 @@ class 문자열나누기 {
     }
 
     // 문자열이 배열의 몇 번째 인덱스인지 반환
-    //
     static int logic(String string, String[] array) {
         for (int i = 0; i < array.length; i++) {
             if (array[i].equals(string)) return i+1;
