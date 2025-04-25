@@ -91,3 +91,93 @@ class Main {
 ### 실행결과
 
 ![01.panda-is-cute](./img/01.panda-is-cute.png)
+
+---
+
+## 문자열 나누기
+
+### 태그
+
+완전 탐색
+
+### 풀이
+
+- 입력
+
+  - 문자열의 길이 N ($3 \le N \le 100$)
+  - 문자열 S (알파벳 소문자로 구성)
+
+- 출력
+
+  - 문자열을 나눠서 얻을 수 있는 최대 점수
+
+- 문제 분석
+
+  - 입력으로 주어진 길이 N의 문자열 S를 서로 겹치지 않는 **3개**의 부분 문자열로 나누어야 한다.
+
+  - 부분 문자열은 모두 길이가 1이상이어야 하며, 원래 문자열에서 연속해야 한다.
+
+    e.g) aabc -> a, ab, c
+
+  - 점수 계산 로직
+
+    - 문자열 S를 위 조건에 따라 나눴을 때, 등장하는 모든 부분문자열을 중복 제거하고 사전순으로 정렬한 결과를 P라고 한다.
+    - 나누어진 3개의 문자열이 각각 P에서 $i, j, k$ 번째로 등장하는 문자열이라면, 얻을 수 있는 점수는 $i + j + k$ 이다.
+
+  - 문자열 S를 3개의 부분문자열로 나눴을 때 얻을 수 있는 점수 중 최대 점수를 계산하여 출력해야 한다.
+
+
+### 소스코드
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+class Main {
+	
+	public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        String S = br.readLine();
+
+        List<String[]> cases = new ArrayList<>();
+        for (int i = 1; i < N; i++) {
+            for (int j = i + 1; j < N; j++) {
+                String subStr1 = S.substring(0, i);
+                String subStr2 = S.substring(i, j);
+                String subStr3 = S.substring(j);
+                cases.add(new String[]{subStr1, subStr2, subStr3});
+            }
+        }
+
+        List<String> dictList = cases.stream()
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
+
+        Map<String, Integer> scores = new HashMap<>();
+        for (int i = 0; i < dictList.size(); i++) {
+            scores.put(dictList.get(i), i + 1);
+        }
+
+        int maxScore = cases.stream()
+                .mapToInt(subStrCase -> Arrays.stream(subStrCase).mapToInt(scores::get).sum())
+                .max()
+                .orElseThrow();
+
+        System.out.println(maxScore);
+    }
+}
+```
+
+### 실행결과
+
+![02-substring](./img/02-substring.png)
