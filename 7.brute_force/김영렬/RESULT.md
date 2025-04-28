@@ -251,4 +251,71 @@ class Main {
 
 ### 실행결과
 
-![03-goorm-find-flag](./img/03-goorm-find-flag.png)
+![03-goorm-find-flag](../../../../GOORM DEEP DIVE/mission/algo-mission/07-bruteforce/img/03-goorm-find-flag.png)
+
+---
+
+## 구름 PRG 2
+
+### 태그
+
+완전 탐색
+
+### 풀이
+
+- 입력 (모두 정수)
+  - 갑옷의 개수 N
+    - $1 \le N \le 5,000$
+  - N개의 라인 - 갑옷 고유값
+    - $2 \le A_{i} \le 100,000$
+- 출력
+  - 입력으로 주어진 갑옷들을 판타스틱한 갑옷으로 만들기 위해 필요한 갑옷 변형 시스템의 최소 횟수
+- 문제 분석
+  - 무기와 갑옷에는 고유값이 부여되어있다. ($고유값 \ge 2$)
+  - 데미지 계산식 (고유값은 항상 2이상의 정수)
+    - H, A, W (나의 체력; 갑옷의 고유값; 무기의 고유값)
+    - 아래 두 조건을 만족하면 공격력만큼 체력이 감소한다.
+      - $A \gt W$
+      - $A~~mod~~W = 0$
+  - 판타스틱한 갑옷
+    - 어떤 경우에도 체력이 감소하지 않는 갑옷
+    - 즉, 갑옷의 고유값(방어력)이 **소수**이면 그 갑옷은 판타스틱한 갑옷이다.
+  - 갑옷 변형 시스템
+    - 일정 재화를 소비해서 갑옷의 고유값을 1씩 내릴 수 있는 시스템
+  - 구름이가 갑옷 변형 시스템에 소비할 수 있는 재화는 제한이 없다.
+
+### 소스코드
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < N; i++) {
+            int armor = Integer.parseInt(br.readLine());
+            int cnt = 0;
+
+            while (!isPrime(armor - cnt)) cnt++;
+            System.out.println(cnt);
+        }
+    }
+
+    private static boolean isPrime(int armor) {
+        if (armor == 2) return true; // 2는 소수
+        if (armor % 2 == 0) return false; // 짝수는 2 제외하고 소수가 아님
+        for (int i = 3; i <= (int)Math.sqrt(armor); i += 2) {
+            if (armor % i == 0) return false;
+        }
+        return true;
+    }
+}
+```
+
+### 실행결과
+
+![04-goorm-rpg-2](./img/04-goorm-rpg-2.png)
+
