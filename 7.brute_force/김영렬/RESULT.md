@@ -251,7 +251,7 @@ class Main {
 
 ### 실행결과
 
-![03-goorm-find-flag](../../../../GOORM DEEP DIVE/mission/algo-mission/07-bruteforce/img/03-goorm-find-flag.png)
+![03-goorm-find-flag](./img/03-goorm-find-flag.png)
 
 ---
 
