@@ -181,3 +181,74 @@ class Main {
 ### 실행결과
 
 ![02-substring](./img/02-substring.png)
+
+---
+
+## 구름 찾기 깃발
+
+### 태그
+
+완전 탐색
+
+### 풀이
+
+- 입력
+  - N K (게임판의 크기; 찾고 싶은 깃발의 값)
+    - $1 \le N \le 1,000$, $1 \le K \le 8$ (N과 K는 모두 정수)
+  - N개의 라인 [형식 - 0 0 0 1]
+    - 각 칸의 정보를 나타내는 문자는 `0` 또는 `1` 이다. (0: 빈 칸; 1: 구름이 있는 칸)
+- 출력
+  - 값이 K인 깃발의 개수
+- 문제 분석
+  - N X N 크기의 게임판에 구름이 숨겨져있다.
+  - 게임판에 숨겨진 모든 구름의 위치를 찾으면 게임에서 승리할 수 있다.
+  - 조금 더 구름을 쉽게 찾을 수 있도록 도와주는 깃발
+    - 구름이 없는 칸이면서, 상하좌우와 대각선으로 인접한 여덟칸 중 구름이 하나 이상 있는 칸에 설치 가능
+    - 설치한 깃발에는 인접한 여덟 칸 중 구름이 있는 칸의 개수에 해당하는 값이 적힌다.
+  - 값이 K인 깃발의 개수를 도출해야 한다.
+
+### 소스코드
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+
+class Main {
+
+    // 좌, 우, 하, 좌하, 우하, 상좌, 상, 상우
+    private static final int[] dx = {0, 0, 1, 1, 1, -1, -1, -1};
+    private static final int[] dy = {-1, 1, 0, -1, 1, -1, 0, 1};
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = input[0]; int K = input[1];
+
+        int[][] board = new int[N][N];
+        for (int i = 0; i < N; i++)
+            board[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        int count = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (board[i][j] == 0) {
+                    int flagVal = 0;
+                    for (int k = 0; k < 8; k++) {
+                        int x = i + dx[k];
+                        int y = j + dy[k];
+                        if (x >= 0 && x < N && y >= 0 && y < N) if (board[x][y] == 1) flagVal++;
+                    }
+                    if (flagVal == K) count++;
+                }
+            }
+        }
+
+        System.out.println(count);
+    }
+}
+```
+
+### 실행결과
+
+![03-goorm-find-flag](./img/03-goorm-find-flag.png)
