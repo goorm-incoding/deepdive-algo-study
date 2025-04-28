@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/1.basic-math/1.basic-math.iml" filepath="$PROJECT_DIR$/1.basic-math/1.basic-math.iml" />
+      <module fileurl="file://$PROJECT_DIR$/2.basic-implementation/2.basic-implementation.iml" filepath="$PROJECT_DIR$/2.basic-implementation/2.basic-implementation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/3.basic-simulation/3.basic-simulation.iml" filepath="$PROJECT_DIR$/3.basic-simulation/3.basic-simulation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/4.basic-algorithm_challenge/4.basic-algorithm_challenge.iml" filepath="$PROJECT_DIR$/4.basic-algorithm_challenge/4.basic-algorithm_challenge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/5.sorting/5.sorting.iml" filepath="$PROJECT_DIR$/5.sorting/5.sorting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/6.recurrence/6.recurrence.iml" filepath="$PROJECT_DIR$/6.recurrence/6.recurrence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/7.brute_force/7.brute_force.iml" filepath="$PROJECT_DIR$/7.brute_force/7.brute_force.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/deepdive-algo-study.iml" filepath="$PROJECT_DIR$/.idea/deepdive-algo-study.iml" />
+      <module fileurl="file://$PROJECT_DIR$/5.sorting/김영렬/김영렬.iml" filepath="$PROJECT_DIR$/5.sorting/김영렬/김영렬.iml" />
+      <module fileurl="file://$PROJECT_DIR$/1.basic-math/김영렬/김영렬2.iml" filepath="$PROJECT_DIR$/1.basic-math/김영렬/김영렬2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/2.basic-implementation/김영렬/김영렬3.iml" filepath="$PROJECT_DIR$/2.basic-implementation/김영렬/김영렬3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/3.basic-simulation/김영렬/김영렬4.iml" filepath="$PROJECT_DIR$/3.basic-simulation/김영렬/김영렬4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/6.recurrence/김영렬/김영렬5.iml" filepath="$PROJECT_DIR$/6.recurrence/김영렬/김영렬5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/4.basic-algorithm_challenge/김영렬/김영렬6.iml" filepath="$PROJECT_DIR$/4.basic-algorithm_challenge/김영렬/김영렬6.iml" />
+    </modules>
+  </component>
+</project>
