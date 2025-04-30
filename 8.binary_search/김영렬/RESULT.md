@@ -176,18 +176,64 @@ public class Main {
 ### 풀이
 
 - 입력
+  - [Line] 1: 구름이가 현재까지 게임을 진행한 횟수 $N$ 과 승리한 횟수 $M$
+  - 제약 조건
+    - 입력으로 주어지는 모든 수는 **정수**
+    - $1 \le N \le 10^{12}$
+    - $0 \le M \le N$
+
 - 출력
+  - 구름이가 승률 1%를 올리기 위해 필요한 승수
+  - 만약 최소 게임 횟수가 $10^{12}~(1조)$회 이상이라면 `x`를 출력한다.
+
 - 문제 분석
+  - 구름이는 현재 승률에서 `1%`만 승률을 더 올리면 마스터 칭호를 얻을 수 있다.
+  - 게임에서의 승률: $M \div N * 100$
+  - 게임 내에서 승률은 소수부를 내림한 정수부만 표기된다. (e.g. `58.893%` -> `58%`)
+  - 해결법
+    - 구름이가 추가로 게임을 할 수 있는 횟수는 $1$회 이상 $10^{12}$회 미만이다.
+    - 따라서, 해당 구간 내에서 이분 탐색을 수행하여 값을 구해야 한다.
+
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
+class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long[] input = Arrays.stream(br.readLine().split(" ")).mapToLong(Long::parseLong).toArray();
+        long N = input[0], M = input[1];
+
+        long currentRate = M * 100 / N, winningRate = currentRate + 1;
+
+        long from = 1L, to = 999_999_999_999L;
+        long criteria = 1_000_000_000_000L;
+
+        while (from <= to) {
+            long mid = (from + to) / 2;
+            long rate = (M + mid) * 100 / (N + mid);
+
+            if (rate >= winningRate) {
+                criteria = mid;
+                to = mid - 1;
+            } else {
+                from = mid + 1;
+            }
+        }
+
+        if (criteria == 1_000_000_000_000L) System.out.println("X");
+        else System.out.println(criteria);
+    }
+}
 ```
 
 ### 실행결과
 
-
+![03-game-master](./img/03-game-master.png)
 
 ---
 
