@@ -246,14 +246,69 @@ class Main {
 ### 풀이
 
 - 입력
+  - [Line] 1: 점의 개수 $N$과 질의의 개수 $Q$
+  - [Line] 2: 각 점의 좌표를 나타내는 $X_{1},...,X_{N}$
+  - [Line] 3 ~ 3 + Q: 질의 $p_{i}$
+  - 제약 조건
+    - 입력으로 주어지는 모든 수는 **정수**
+    - $1 \le N,Q \le 100,000$
+    - $-10^{18} \le X_{i},p_{i} \le 10^{18}$
+
 - 출력
+  - 각 질의마다 한 줄에 하나씩 가장 가까운 점의 x좌표를 출력
+  - 그러한 점이 여러 개라면 (질의의 좌표에서의 거리가 동일한 점이 여러개)
+
 - 문제 분석
+  - 이전 문제와 마찬가지로 정렬된 배열 내에서 이분 탐색을 통해 조건과 일치하는 값을 찾으면 된다.
+
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
+class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = input[0], Q = input[1];
+
+        long[] X = Arrays.stream(br.readLine().split(" ")).mapToLong(Long::parseLong).toArray();
+        Arrays.sort(X);
+
+        StringBuilder sb = new StringBuilder();
+        while (Q > 0) {
+            long p = Long.parseLong(br.readLine());
+
+            int start = 0, end = N - 1;
+            while (start < end) {
+                int mid = (start + end) / 2;
+
+              	// 인덱스 mid의 좌표가 p의 좌표보다 작다면 조건 만족 X
+                if (X[mid] < p) start = mid + 1;
+              	// 인덱스 mid의 값이 p의 좌표보다 크거나 같다면 조건을 만족
+              	// 인덱스 mid 이후의 요소들은 고려할 필요 X -> end를 mid로 설정
+                else end = mid;
+            }
+
+            // start == 0은 p보다 좌표값이 작은 점이 없다는 뜻이므로 X의 첫번째 요소가 가장 가까운 점이 된다.
+            if (start == 0) sb.append(X[start]).append("\n");
+            else {
+                // p의 좌표와 같거나 p보다 큰 좌표를 가지는 점 중에서 p에 더 가까운 점을 찾아 출력한다.
+                if (Math.abs(p - X[start - 1]) <= Math.abs(p - X[start])) sb.append(X[start - 1]).append("\n");
+                else sb.append(X[start]).append("\n");
+            }
+            Q--;
+        }
+
+        System.out.println(sb);
+    }
+}
 ```
 
 ### 실행결과
+
+![04-find-most-close-dot](./img/04-find-most-close-dot.png)
 
