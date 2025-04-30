@@ -1,4 +1,4 @@
-# 알고리즘 미션 - 완전 탐색
+# 알고리즘 미션 - 이분 탐색
 
 ---
 
@@ -107,22 +107,63 @@ class Main {
 ### 풀이
 
 - 입력
+  - [Line] 1: 섭외 가능한 가수들의 수 $N$
+  - [Line] 2: 공백으로 구분되는 각 가수의 팬클럽 영향력 $S$ (N개)
+  - 제약 조건
+    - 입력으로 주어지는 모든 수는 **정수**
+    - $3 \le N \le 3,000$
+    - $1 \le S_{i} \le 10^{12}$
 
 - 출력
+  - 조건에 맞게 섭외할 수 있는 경우의 수
 
 - 문제 분석
-
+  - 총 3명의 가수가 섭외된다.
+  - 한 가수의 팬클럽의 영향력이 다른 두 가수의 팬클럽의 영향력의 합을 초과하는 경우가 없도록 섭외해야 한다.
+  - 모든 경우를 일일히 확인할 경우 시간복잡도는 $O(N^{3})$이다.
+    - N은 최대 3,000 까지 입력되므로 제한 시간안에 완전 탐색으로 이 문제를 해결하는 것은 불가능하다.
+    - 따라서 이 문제를 해결하기 위해서는 이진 탐색을 사용해야 한다는 것을 알 수 있다.
 
 
 ### 소스코드
 
 ```java
+import java.io.*;
+import java.util.*;
 
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        long[] S = Arrays.stream(br.readLine().split(" "))
+                .mapToLong(Long::parseLong)
+                .sorted()
+                .toArray();
+
+        long result = 0L;
+        for (int i = 0; i < N - 2; i++) {
+            for (int j = i + 1; j < N - 1; j++) {
+                long sum = S[i] + S[j];
+                int idx = Arrays.binarySearch(S, j + 1, N, sum);
+
+                // Arrays.binarySearch 메서드는 key로 주어진 값이 배열에 존재하지 않을 경우
+                // (해당 값이 들어가야 하는 위치의 인덱스 * -1) - 1 을 반환한다.
+                // 따라서 해당값에 -1을 곱해 양수로 변환해준 뒤 1을 빼면 가장 큰 수의 인덱스를 구할 수 있다.
+                if (idx < 0) idx = -idx - 1;
+                else idx++;
+
+                if (idx > j + 1) result += (idx - (j + 1));
+            }
+        }
+
+        System.out.println(result);
+    }
+}
 ```
 
 ### 실행결과
 
-
+![02-operation-recruitment](./img/02-operation-recruitment.png)
 
 ---
 
