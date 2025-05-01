@@ -214,22 +214,81 @@ class Main {
 
 ### 태그
 
-
+자료구조, Union & Find
 
 ### 풀이
 
 - **입력**
-  
+  - 입력으로 주어지는 모든 수는 정수
+
+  - [Line] 1: 물건의 수 $N$, 구름이가 처리한 작업의 수 $M$
+
+  - [Line] 2 ~ 2 + M: 물건의 번호를 의미하는 $a,~b$
+
+  - 제약 조건
+    - $1 \le N,M \le 100,000$
+
+    - $1 \le a,b \le N$
+
 - **출력**
-  
+  - 모든 작업을 처리한 후, 만들어진 묶음 상품의 수를 출력
+
 - **문제 분석**
+  - 최초에는 모든 물건이 자기 자신만을 포함한 묶음 상품(집합)이다.
+  - 구름이는 여러번에 걸쳐 $a$번 물건이 포함된 묶음 상품과 $b$번 물건이 포함된 묶음 상품을 합쳐 하나의 묶음 상품(집합)으로 만든다.
+  - 처음에는 Stack 배열을 이용하여 구현하려 해보았지만 생각대로 잘 되지 않았다.
+  - 집합과 관련된 자료구조가 어떤 것이 있을까 고민하던 도중 수업시간에 배웠던 Union&Find 알고리즘이 생각났다.
 
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
+class Main {
+
+    private static int[] parent;
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = input[0], M = input[1];
+
+        parent = new int[N + 1];
+        for (int i = 1; i <= N; i++) parent[i] = i;
+
+        int aggregateCount = N;
+        for (int i = 0; i < M; i++) {
+            input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            int a = input[0], b = input[1];
+            if (union(a, b)) aggregateCount--;
+        }
+
+        System.out.println(aggregateCount);
+    }
+
+    private static int find(int num) {
+        if (parent[num] != num) parent[num] = find(parent[num]);
+        return parent[num];
+    }
+
+    private static boolean union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
+
+        if (rootA == rootB) return false;
+
+        if (rootA < rootB) parent[rootB] = rootA;
+        else parent[rootA] = rootB;
+
+        return true;
+    }
+}
 ```
 
 ### 실행결과
 
+![04-product-aggregate](./img/04-product-aggregate.png)
