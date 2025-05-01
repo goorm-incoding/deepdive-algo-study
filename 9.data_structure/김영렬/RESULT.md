@@ -137,30 +137,80 @@ class Main {
 
 ### 태그
 
-
+자료구조, 셋
 
 ### 풀이
 
 - **입력**
-  
+  - [Line] 1: 구름이와 친구가 가지고 있는 아이템의 수 $N$, 교환을 시도한 횟수 $M$
+
+  - [Line] 2: 구름이가 처음에 가지고 있던 $N$ 종류의 아이템 이름
+
+  - [Line] 3: 친구가 처음에 가지고 있던 $N$ 종류의 아이템 이름
+
+  - [Line] 4 ~ 4 + M: 두 문자열 $A_{i}$ 와 $B_{i}$
+
+  - 제약 조건
+    - $1 \le N \le 5,000$
+
+    - $1 \le M \le 200,000$
+
+    - 아이템 이름은 알파벳 소문자로만 이루어진 길이 1 이상 5 이하의 문자열
+
+    - 아이템의 이름은 모두 다르다. (중복 X)
+
 - **출력**
-  
+  - 모든 교환이 끝난 뒤 구름이가 가지고 있는 아이템의 이름을 사전순으로 공백을 두고 출력
+
 - **문제 분석**
+  - 구름이와 친구는 각각 $N$개의 서로 다른 아이템을 가지고 있다.
+  - 구름이와 친구는 $M$번의 교환 과정을 통해 서로 아이템을 교환한다.
+  - 교환조건: 구름이가 $A_{i}$ 아이템을 가지고 있고 친구가 $B_{i}$ 아이템을 가지고 있다면 교환이 이루어진다.
+  - 구름이와 친구는 중복되지 않는 유니크한 아이템을 가지고 있어야 하므로 Set을 사용하면 된다.
 
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = input[0];
+        int M = input[1];
+        Set<String> goormItems = Arrays.stream(br.readLine().split(" ")).collect(Collectors.toSet());
+        Set<String> friendItems = Arrays.stream(br.readLine().split(" ")).collect(Collectors.toSet());
+
+        while (M-- > 0) {
+            String[] exchange = br.readLine().split(" ");
+            if (goormItems.contains(exchange[0]) && friendItems.contains(exchange[1])) {
+                goormItems.remove(exchange[0]);
+                friendItems.remove(exchange[1]);
+                goormItems.add(exchange[1]);
+                friendItems.add(exchange[0]);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        goormItems.stream().sorted().forEach(item -> sb.append(item).append(" "));
+        System.out.println(sb.toString().trim());
+    }
+}
 ```
 
 ### 실행결과
 
-
+![03-item-exchange](./img/03-item-exchange.png)
 
 ---
 
-## 가장 가까운 점 찾기
+## 묶음 상품
 
 ### 태그
 
