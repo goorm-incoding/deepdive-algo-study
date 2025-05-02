@@ -14,7 +14,7 @@ public class 폭탄_해제 {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        // 각 정점의 차수를 저장하는 배열
+        // 각 정점의 차수를 저장하는 배열, 전선 개수를 저장하는 배열
         int[] degree = new int[N + 1];
         int[][] wires = new int[M][2];
 
