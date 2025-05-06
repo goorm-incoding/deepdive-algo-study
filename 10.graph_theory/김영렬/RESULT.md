@@ -87,7 +87,7 @@ class Main {
 
 ### 실행결과
 
-
+![01-defuse-a-bomb](./img/01-defuse-a-bomb.png)
 
 ---
 
@@ -95,23 +95,66 @@ class Main {
 
 ### 태그
 
-
+그래프, 트리
 
 ### 풀이
 
-- **문제 분석**
-- **입력**
+- **문제 분석 **
+
+  - 문제의 설명은 길지만 간단히 요약하자면 입력으로 주어진 노드들이 트리를 구성하기 위한 최소 간선의 개수를 구하는 문제이다.
+  - 따라서 사실상 주어진 입력 중 수로의 개수 $M$만 필요하고 나머지 값들은 필요하지 않다.
+
+- **입력 (모두 정수)**
+
+  - 테스트 케이스 개수 $T$
+
+    $1 \le T \le 100$
+
+  - 테스트 케이스 정보
+
+    - 지점의 개수 $N$, 수로의 개수 $M$
+
+      $2 \le N \le 1,000,~1 \le M \le 10,000$
+
+    - $A_{i},~B_{i}$ ($M$번 반복)
+
+      $1 \le A_{i},B_{i} \le N; ~~ A_{i} \ne B_{i}$
+
+  - 항상 모든 지점은 수로를 통해 연결되어 있다. (그래프의 사이클은 1개)
+
 - **출력**
+
+  - 테스크 케이스 마다 **정비된 수로만으로 모든 지점이 서로 연결되게끔 정비해야 하는 수로의 최소 개수**를 한 줄에 하나씩 출력
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
+class Main {
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < T; i++) {
+            String[] input = br.readLine().split(" ");
+            // 지점의 개수 N, 수로의 개수 M
+            int N = Integer.parseInt(input[0]), M = Integer.parseInt(input[1]);
+            for (int j = 0; j < M; j++) {
+                input = br.readLine().split(" ");
+            }
+            System.out.println(N - 1);
+        }
+    }
+}
 ```
 
 ### 실행결과
 
-
+![02-drought](./img/02-drought.png)
 
 ---
 
@@ -134,5 +177,4 @@ class Main {
 ```
 
 ### 실행결과
-
 
