@@ -188,7 +188,7 @@ class Main {
 
   $N$개의 섬 사이에 존재하는 연합의 개수
 
-### 소스코드 - 인접 리스트 (시간 초과 발생)
+### 소스코드 - 인접 리스트
 
 ```java
 import java.io.BufferedReader;
