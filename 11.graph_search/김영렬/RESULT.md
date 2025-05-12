@@ -270,23 +270,88 @@ class Main {
 
 ### 태그
 
-그래프
+그래프, BFS
 
 ### 풀이
 
 - **문제 분석**
+  - 흔한 그래프 탐색 문제 중 하나이다. DFS 또는 BFS로 해결하면 된다.
+  - 고려해야 할 사항은 다음과 같다.
+    - 한 번 방문한 노드는 다시 방문할 수 없다. 시작 노드도 방문한 것으로 간주한다 -> 방문 배열 사용
+    - 현재 노드와 간선으로 직접 연결된 다른 노드 중, 방문할 수 있으면서 번호가 가장 작은 노드로 이동한다. -> 이웃한 노드 정렬 필요
 - **입력**
+  - 노드의 개수 $N$, 간선의 개수 $M$, 시작 노드의 번호 $K$
+    - $1 \le N \le 2,000$
+    - $1 \le M \le 200,000$
+    - $1 \le K \le N$
+  - 간선이 잇는 양끝 정점의 번호 $s_{i},e_{i}$($M$개의 줄)
+    - $1 \le s_{i}$
 - **출력**
+  - 플레이어가 더 이상 이동할 수 없을 때까지 방문한 노드의 개수와 마지막 노드의 번호
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
+class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] input = br.readLine().split(" ");
+        int N = Integer.parseInt(input[0]), M = Integer.parseInt(input[1]), K = Integer.parseInt(input[2]);
+
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < N + 1; i++) {
+            graph.add(new LinkedList<>());
+        }
+
+        for (int i = 0; i < M; i++) {
+            input = br.readLine().split(" ");
+            int s = Integer.parseInt(input[0]), e = Integer.parseInt(input[1]);
+            graph.get(s).add(e);
+            graph.get(e).add(s);
+        }
+
+        bfs(graph, N, K);
+    }
+
+    private static void bfs(List<List<Integer>> graph, int N, int K) {
+        boolean[] visited = new boolean[N + 1];
+        Deque<Integer> q = new ArrayDeque<>();
+        q.add(K);
+        int answer = 0;
+        int leastVisited = K;
+        while (!q.isEmpty()) {
+            leastVisited = q.poll();
+            visited[leastVisited] = true;
+            answer++;
+            List<Integer> neighbors = graph.get(leastVisited);
+            if (neighbors != null && !neighbors.isEmpty()) {
+                Collections.sort(neighbors);
+                for (int node : neighbors) {
+                    if (!visited[node]) {
+                        q.add(node);
+                        break;
+                    }
+                }
+            }
+        }
+        System.out.println(answer + " " + leastVisited);
+    }
+}
 ```
 
 ### 실행결과
 
-
+![03-small-node](./img/03-small-node.png)
 
 ---
 
