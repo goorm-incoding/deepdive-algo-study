@@ -359,21 +359,98 @@ class Main {
 
 ### 태그
 
-그래프
+그래프, BFS
 
 ### 풀이
 
 - **문제 분석**
-- **입력**
+  - 해당 카테고리의 다른 문제들과 마찬가지로 그래프 탐색 문제이다.
+  - 특이점은 구름이가 학습한 언어별로 방문할 수 있는 나라의 수를 구해 최대로 방문할 수 있는 나라의 수를 구한다는 것이다.
+- **입력 (모두 정수)**
+  - 나라의 개수 $N$, 항로의 개수 $M$
+    - $1 \le N \le 1,000$
+    - $0 \le M \le 2,000$
+  - 각 나라가 사용하는 언어 ($a_{1},a_{2}, \cdots, a_{N}$)
+    - $1 \le a_{i} \le 10$
+  - 각 항로가 연결하는 두 나라의 번호  $p,~q$
+    - $1 \le p,q \le N;~p \ne q$
 - **출력**
+  - 구름이가 공부할 언어를 적절히 선택했을 때, 방문할 수 있는 서로 다른 나라의 개수
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.stream.IntStream;
 
+class Main {
+
+    private static final List<List<Integer>> adjacentList = new ArrayList<>();
+
+    private static int[] languages;
+    private static boolean[] visited;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] input = br.readLine().split(" ");
+        int N = Integer.parseInt(input[0]), M = Integer.parseInt(input[1]);
+        visited = new boolean[N];
+
+        languages = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        // 인접 리스트 초기화 및 데이터 삽입
+        for (int i = 0; i < N; i++) {
+            adjacentList.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < M; i++) {
+            input = br.readLine().split(" ");
+            int p = Integer.parseInt(input[0]) - 1; // 인덱스가 0부터 시작하기 때문에 -1
+            int q = Integer.parseInt(input[1]) - 1; // 인덱스가 0부터 시작하기 때문에 -1
+            adjacentList.get(p).add(q);
+            adjacentList.get(q).add(p);
+        }
+
+        int result = 0;
+        for (int i = 1; i <= 10; i++) {
+            if (languages[0] == i) continue; // 첫번째 나라 언어는 패스
+            result = Math.max(result, bfs(i));
+        }
+
+        System.out.println(result);
+    }
+
+    private static int bfs(int lang) {
+        Deque<Integer> queue = new ArrayDeque<>();
+        Arrays.fill(visited, false); // 방문 배열 초기화 - bfs가 언어별로 반복해서 수행되기 때문에
+        queue.add(0);
+        visited[0] = true;
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            for (int neighbor : adjacentList.get(node)) {
+                // 그 나라에 방문하지 않았으며 그 나라의 언어가 모국어 또는 학습한 언어일 경우
+                if (!visited[neighbor] && (languages[neighbor] == languages[0] || languages[neighbor] == lang)) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return (int) IntStream.range(0, visited.length).filter(i -> visited[i]).count();
+    }
+}
 ```
 
 ### 실행결과
+
+![04-world-tour](./img/04-world-tour.png)
 
 ---
 
