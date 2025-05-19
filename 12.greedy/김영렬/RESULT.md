@@ -234,16 +234,86 @@ class Main {
 ### 풀이
 
 - **문제 분석**
+  - 구름이가 최대한 맛있게 쿠키를 먹는다 == 쿠키의 맛있는 정도의 곱이 최대화되어야 한다.
+  - 쿠키가 맛이 없어지기 전에 (쿠키의 맛이 0이 되기전에) 최대한 빨리 섭취해야 한다.
+    - 입력된 데이터를 맛을 기준으로 정렬한다.
+
+    - 곱이 0이 되는 경우에 대해 예외처리를 한다.
+
+    - 그렇지 않을 경우에는 정렬된 데이터의 번호를 순서대로 출력한다.
 
 - **입력**
+  - 쿠키의 개수 $N$
+    - $1 \le N \le 100,000$
+
+  - 쿠키의 맛있는 정도 $A_{1}, A_{2}, \cdots ,A_{N}$
+    - $1 \le A_{i} \le 100,000$
 
 - **출력**
+  - 구름이가 최대한 맛있게 쿠키를 먹는 순서에 따른 쿠키 N개의 번호
+  - 최대한 맛있게 쿠키를 먹는 순서가 여러 가지라면, 사전순으로 제일 앞서는 순서를 출력
+
 
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
 
+class Main {
+
+    static class Cookie {
+        int idx;
+        int deli;
+
+        public Cookie(int idx, int deli) {
+            this.idx = idx;
+            this.deli = deli;
+        }
+
+        public int getDeli() {
+            return deli;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[] values = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        Cookie[] cookies = new Cookie[N];
+        for (int i = 0; i < N; i++) {
+            cookies[i] = new Cookie(i + 1, values[i]);
+        }
+
+        Arrays.sort(cookies, Comparator.comparingInt(Cookie::getDeli));
+
+        StringBuilder sb = new StringBuilder();
+
+        // 만일 어떤 쿠키의 맛이 0이 되었을 경우에는 어떤 순서로 섭취하든 곱은 무조건 0이 된다.
+        // 따라서 이 경우에는 출력 요구 사항에 맞춰 사전순으로 쿠키의 번호를 출력해야 한다.
+        for (int i = 0; i < N; i++) { // 맛 감소 레벨
+            if (cookies[i].deli - i <= 0) {
+                for (int j = 1; j <= N; j++) {
+                    sb.append(j).append(" ");
+                }
+                System.out.println(sb.toString().trim());
+                return;
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            sb.append(cookies[i].idx).append(" ");
+        }
+
+        System.out.println(sb.toString().trim());
+    }
+}
 ```
 
 ### 실행결과
+
+![03-choco-cookie](./img/03-choco-cookie.png)
