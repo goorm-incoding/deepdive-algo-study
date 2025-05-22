@@ -425,18 +425,87 @@ class Main {
 
 ### 태그
 
+DP
+
 ### 풀이
 
 - **문제 분석**
 
+  - B 학점을 받은 과목은 최대 하나이다. -> 성적표에 B 학점은 0 또는 1개 존재
+
+  - 구름이는 세 과목 이상 연속으로 C학점을 받지 않았다. -> C 학점은 하나도 없거나, 한 개만 있거나, 연속해서 2개가 존재할 수 있다.
+
+  - 위 두 조건을 병합하면 아래와 같은 케이스들이 나온다.
+
+    - B(X) C(0)
+    - B(X) C(1)
+    - B(X) C(2)
+    - B(O) C(0)
+    - B(O) C(1)
+    - B(O) C(2)
+
+  - 첫 번째 과목에 올 수 있는 과목은 A, B, C 3개 이다. 이는 각각 아래에 대응된다.
+
+    A: B(X) C(0), B: B(O) C(0), C: B(X) C(1)
+
+  - i 번째 과목의 경우의 수는 어떻게 될까?
+
+    - B(X) C(0) = B(X) C(0) + B(X) C(1) + B(X) C(2)
+    - B(X) C(1) = B(X) C(0)
+    - B(X) C(2) = B(X) C(1) 
+    - B(O) C(0) = B(X) C(0) + B(X) C(1) + B(X) C(2) + B(O) C(0) + B(O) C(1) + B(O) C(2)
+    - B(O) C(1) = B(O) C(0)
+    - B(O) C(2) = B(O) C(1)
+
+  - 이러한 규칙을 실제 코드를 구현해내면 된다.
+
 - **입력**
 
+  수강 과목 수 $N$ ($1 \le 1,000,000$)
+
 - **출력**
+
+  N개의 과목으로 형성 될 수 있는 모든 경우의 수를 1,000,000로 나눈 나머지
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
+class Main {
+
+	private static final int MOD = 1000000;
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+
+		// B 학점은 최대 하나(0 또는 1개)
+		// C 학점은 세 과목 이상 연속되지 않는다(연속 1, 2개)
+		// Cases. B(X) C(0), B(X) C(1), B(X) C(2), B(O) C(0), B(O) C(1), B(O) C(2)
+		int[][] dp = new int[N][6];
+		dp[0][0] = 1; dp[0][1] = 1; dp[0][3] = 1;
+		
+		for (int i = 1; i < N; i++) {
+			dp[i][0] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2]) % MOD; // B(X) C(0)
+			dp[i][1] = dp[i - 1][0]; // B(X) C(1)
+			dp[i][2] = dp[i - 1][1]; // B(X) C(2)
+			dp[i][3] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2] + dp[i - 1][3] + dp[i - 1][4] + dp[i - 1][5]) % MOD; // B(O) C(0)
+			dp[i][4] = dp[i - 1][3]; // B(O) C(1)
+			dp[i][5] = dp[i - 1][4]; // B(O) C(1)
+		}
+
+		int sum = 0;
+		for (int i = 0; i < 6; i++) {
+			sum = (sum + dp[N - 1][i]) % MOD;
+		}
+
+		System.out.println(sum);
+	}
+}
 ```
 
 ### 실행결과
+
+![06-predict-point](./img/06-predict-point.png)
