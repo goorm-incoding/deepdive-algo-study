@@ -275,23 +275,70 @@ class Main {
 
 ### 태그
 
+DP
+
 ### 풀이
 
 - **문제 분석**
 
+  ![04-solve-01](./img/04-solve-01.png)
+
+  <img src="./img/04-solve-02.png" alt="04-solve-02" style="zoom:50%;" />
+
+  위 과정을 통해 규칙성을 찾을 수 있다.
+
 - **입력**
 
+  두 사람의 구슬 개수 $n, m$, 게임 횟수 $k$
+
+  - $1 \le n,m \le 100$
+
+  - $1 \le k \le 1,000$
+
 - **출력**
+
+  둘 중 한 명이 모든 구슬을 잃을 수 있는 경우 -> 구름이 또는 상대방이 우승하는 경우의 수의 합
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.math.BigInteger;
 
+class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int n = input[0], m = input[1], k = input[2];
+
+        BigInteger[][] table = new BigInteger[k + 1][n + m + 1];
+        Arrays.stream(table).forEach(arr -> Arrays.fill(arr, BigInteger.ZERO));
+        table[0][n] = BigInteger.ONE; // 초기값 설정
+
+        for (int i = 0; i < k; i++) {
+            for (int j = 1; j < n + m; j++) {
+                table[i + 1][j - 1] = table[i + 1][j - 1].add(table[i][j]);
+                table[i + 1][j] = table[i + 1][j].add(table[i][j]);
+                table[i + 1][j + 1] = table[i + 1][j + 1].add(table[i][j]);
+            }
+        }
+
+        BigInteger sum = BigInteger.ZERO;
+        for (int i = 1; i <= k; i++) {
+            sum = sum.add(table[i][0]).add(table[i][n + m]);
+        }
+
+        System.out.println(sum);
+    }
+}
 ```
 
 ### 실행결과
 
-
+![04-bead-game](./img/04-bead-game.png)
 
 ---
 
@@ -299,23 +346,78 @@ class Main {
 
 ### 태그
 
+DP
+
 ### 풀이
 
 - **문제 분석**
 
+  - 어떤 한 테이블에 사람이 존재하면 앞뒤와 양옆으로 인접한 테이블에는 착석 불가
+  - 형성 가능한 케이스
+    - (X, X, X)
+    - (O, X, X)
+    - (X, O, X)
+    - (X, X, O)
+    - (O, X, O)
+  - 첫 번째 줄(N = 1)에는 위의 모든 경우가 올 수 있다. 그렇다면 N이 2 이상이 되면 어떻게 될까?
+    인접한 사방의 테이블에 착석이 불가하다는 조건을 반영하면 각 케이스의 다음에 형성 가능한 케이스들은 위와 같이 형성된다.
+    - (X, X, X) -> (X, X, X), (O, X, X), (X, O, X), (X, X, O), (O, X, O)
+    - (O, X, X) -> (X, X, X), (X, O, X), (X, X, O)
+    - (X, O, X) -> (X, X, X), (O, X, X), (X, X, O), (O, X, O)
+    - (X, X, O) -> (X, X, X), (O, X, X), (X, O, X)
+    - (O, X, O) -> (X, X, X), (X, O, X)
+  - 이러한 규칙을 실제 코드를 구현해내면 된다.
+
 - **입력**
 
+  테이블의 줄 수 $N$ ($1 \le N \le 100,000$)
+
 - **출력**
+
+  구름이가 테이블에 스티커를 붙일 수 있는 모든 경우의 수를 100,000,007로 나눈 나머지
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
+class Main {
+
+	private static final int MOD = 100000007;
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+
+		// 앞뒤 양옆 비활성화
+		// Single row Cases. (X, X, X), (O, X, X), (X, O, X), (X, X, O), (O, X, O)
+		int[][] dp = new int[N][5];
+
+		Arrays.fill(dp[0], 1);
+		
+		for (int i = 1; i < N; i++) {
+			dp[i][0] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2] + dp[i - 1][3] + dp[i - 1][4]) % MOD;
+			dp[i][1] = (dp[i - 1][0] + dp[i - 1][2] + dp[i - 1][3]) % MOD;
+			dp[i][2] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][3] + dp[i - 1][4]) % MOD;
+			dp[i][3] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2]) % MOD;
+			dp[i][4] = (dp[i - 1][0] + dp[i - 1][2]) % MOD;
+		}
+
+		int sum = 0;
+		for (int i = 0; i < 5; i++) {
+			sum = (sum + dp[N - 1][i]) % MOD;
+		}
+
+		System.out.println(sum);
+	}
+}
 ```
 
 ### 실행결과
 
-
+![05-distancing](./img/05-distancing.png)
 
 ---
 
@@ -323,18 +425,87 @@ class Main {
 
 ### 태그
 
+DP
+
 ### 풀이
 
 - **문제 분석**
 
+  - B 학점을 받은 과목은 최대 하나이다. -> 성적표에 B 학점은 0 또는 1개 존재
+
+  - 구름이는 세 과목 이상 연속으로 C학점을 받지 않았다. -> C 학점은 하나도 없거나, 한 개만 있거나, 연속해서 2개가 존재할 수 있다.
+
+  - 위 두 조건을 병합하면 아래와 같은 케이스들이 나온다.
+
+    - B(X) C(0)
+    - B(X) C(1)
+    - B(X) C(2)
+    - B(O) C(0)
+    - B(O) C(1)
+    - B(O) C(2)
+
+  - 첫 번째 과목에 올 수 있는 과목은 A, B, C 3개 이다. 이는 각각 아래에 대응된다.
+
+    A: B(X) C(0), B: B(O) C(0), C: B(X) C(1)
+
+  - i 번째 과목의 경우의 수는 어떻게 될까?
+
+    - B(X) C(0) = B(X) C(0) + B(X) C(1) + B(X) C(2)
+    - B(X) C(1) = B(X) C(0)
+    - B(X) C(2) = B(X) C(1) 
+    - B(O) C(0) = B(X) C(0) + B(X) C(1) + B(X) C(2) + B(O) C(0) + B(O) C(1) + B(O) C(2)
+    - B(O) C(1) = B(O) C(0)
+    - B(O) C(2) = B(O) C(1)
+
+  - 이러한 규칙을 실제 코드를 구현해내면 된다.
+
 - **입력**
 
+  수강 과목 수 $N$ ($1 \le 1,000,000$)
+
 - **출력**
+
+  N개의 과목으로 형성 될 수 있는 모든 경우의 수를 1,000,000로 나눈 나머지
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
+class Main {
+
+	private static final int MOD = 1000000;
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+
+		// B 학점은 최대 하나(0 또는 1개)
+		// C 학점은 세 과목 이상 연속되지 않는다(연속 1, 2개)
+		// Cases. B(X) C(0), B(X) C(1), B(X) C(2), B(O) C(0), B(O) C(1), B(O) C(2)
+		int[][] dp = new int[N][6];
+		dp[0][0] = 1; dp[0][1] = 1; dp[0][3] = 1;
+		
+		for (int i = 1; i < N; i++) {
+			dp[i][0] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2]) % MOD; // B(X) C(0)
+			dp[i][1] = dp[i - 1][0]; // B(X) C(1)
+			dp[i][2] = dp[i - 1][1]; // B(X) C(2)
+			dp[i][3] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2] + dp[i - 1][3] + dp[i - 1][4] + dp[i - 1][5]) % MOD; // B(O) C(0)
+			dp[i][4] = dp[i - 1][3]; // B(O) C(1)
+			dp[i][5] = dp[i - 1][4]; // B(O) C(1)
+		}
+
+		int sum = 0;
+		for (int i = 0; i < 6; i++) {
+			sum = (sum + dp[N - 1][i]) % MOD;
+		}
+
+		System.out.println(sum);
+	}
+}
 ```
 
 ### 실행결과
+
+![06-predict-point](./img/06-predict-point.png)
