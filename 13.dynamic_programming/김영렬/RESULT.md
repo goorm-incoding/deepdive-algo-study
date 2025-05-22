@@ -346,23 +346,78 @@ class Main {
 
 ### 태그
 
+DP
+
 ### 풀이
 
 - **문제 분석**
 
+  - 어떤 한 테이블에 사람이 존재하면 앞뒤와 양옆으로 인접한 테이블에는 착석 불가
+  - 형성 가능한 케이스
+    - (X, X, X)
+    - (O, X, X)
+    - (X, O, X)
+    - (X, X, O)
+    - (O, X, O)
+  - 첫 번째 줄(N = 1)에는 위의 모든 경우가 올 수 있다. 그렇다면 N이 2 이상이 되면 어떻게 될까?
+    인접한 사방의 테이블에 착석이 불가하다는 조건을 반영하면 각 케이스의 다음에 형성 가능한 케이스들은 위와 같이 형성된다.
+    - (X, X, X) -> (X, X, X), (O, X, X), (X, O, X), (X, X, O), (O, X, O)
+    - (O, X, X) -> (X, X, X), (X, O, X), (X, X, O)
+    - (X, O, X) -> (X, X, X), (O, X, X), (X, X, O), (O, X, O)
+    - (X, X, O) -> (X, X, X), (O, X, X), (X, O, X)
+    - (O, X, O) -> (X, X, X), (X, O, X)
+  - 이러한 규칙을 실제 코드를 구현해내면 된다.
+
 - **입력**
 
+  테이블의 줄 수 $N$ ($1 \le N \le 100,000$)
+
 - **출력**
+
+  구름이가 테이블에 스티커를 붙일 수 있는 모든 경우의 수를 100,000,007로 나눈 나머지
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
+class Main {
+
+	private static final int MOD = 100000007;
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+
+		// 앞뒤 양옆 비활성화
+		// Single row Cases. (X, X, X), (O, X, X), (X, O, X), (X, X, O), (O, X, O)
+		int[][] dp = new int[N][5];
+
+		Arrays.fill(dp[0], 1);
+		
+		for (int i = 1; i < N; i++) {
+			dp[i][0] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2] + dp[i - 1][3] + dp[i - 1][4]) % MOD;
+			dp[i][1] = (dp[i - 1][0] + dp[i - 1][2] + dp[i - 1][3]) % MOD;
+			dp[i][2] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][3] + dp[i - 1][4]) % MOD;
+			dp[i][3] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2]) % MOD;
+			dp[i][4] = (dp[i - 1][0] + dp[i - 1][2]) % MOD;
+		}
+
+		int sum = 0;
+		for (int i = 0; i < 5; i++) {
+			sum = (sum + dp[N - 1][i]) % MOD;
+		}
+
+		System.out.println(sum);
+	}
+}
 ```
 
 ### 실행결과
 
-
+![05-distancing](./img/05-distancing.png)
 
 ---
 
