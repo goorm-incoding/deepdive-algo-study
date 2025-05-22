@@ -275,23 +275,70 @@ class Main {
 
 ### 태그
 
+DP
+
 ### 풀이
 
 - **문제 분석**
 
+  ![04-solve-01](./img/04-solve-01.png)
+
+  <img src="./img/04-solve-02.png" alt="04-solve-02" style="zoom:50%;" />
+
+  위 과정을 통해 규칙성을 찾을 수 있다.
+
 - **입력**
 
+  두 사람의 구슬 개수 $n, m$, 게임 횟수 $k$
+
+  - $1 \le n,m \le 100$
+
+  - $1 \le k \le 1,000$
+
 - **출력**
+
+  둘 중 한 명이 모든 구슬을 잃을 수 있는 경우 -> 구름이 또는 상대방이 우승하는 경우의 수의 합
 
 ### 소스코드
 
 ```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.math.BigInteger;
 
+class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int n = input[0], m = input[1], k = input[2];
+
+        BigInteger[][] table = new BigInteger[k + 1][n + m + 1];
+        Arrays.stream(table).forEach(arr -> Arrays.fill(arr, BigInteger.ZERO));
+        table[0][n] = BigInteger.ONE; // 초기값 설정
+
+        for (int i = 0; i < k; i++) {
+            for (int j = 1; j < n + m; j++) {
+                table[i + 1][j - 1] = table[i + 1][j - 1].add(table[i][j]);
+                table[i + 1][j] = table[i + 1][j].add(table[i][j]);
+                table[i + 1][j + 1] = table[i + 1][j + 1].add(table[i][j]);
+            }
+        }
+
+        BigInteger sum = BigInteger.ZERO;
+        for (int i = 1; i <= k; i++) {
+            sum = sum.add(table[i][0]).add(table[i][n + m]);
+        }
+
+        System.out.println(sum);
+    }
+}
 ```
 
 ### 실행결과
 
-
+![04-bead-game](./img/04-bead-game.png)
 
 ---
 
